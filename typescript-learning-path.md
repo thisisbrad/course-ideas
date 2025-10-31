@@ -1,0 +1,1094 @@
+# 4-Week TypeScript Learning Path: From Novice to Generics
+
+## Week 1: JavaScript Foundations with Type Awareness
+
+### Learning Objectives
+
+- Understand the difference between JavaScript and TypeScript
+- Learn why type safety prevents runtime errors
+- Begin annotating JavaScript with type comments
+- Transition to basic TypeScript type annotations
+
+### Day 1-2: Understanding Type Safety
+
+#### Why TypeScript?
+
+JavaScript is dynamically typed, which means variables can change types during runtime, leading to common errors:
+
+```javascript
+// JavaScript - This will cause a runtime error
+let price = 100;
+price = "100"; // Changed from number to string
+let total = price + 20; // Results in "10020" instead of 120
+console.log(total);
+```
+
+With TypeScript comments:
+
+```javascript
+// TypeScript-style comments
+let price = 100; // price: number
+price = "100"; // Error spotted in review: type mismatch
+let total = price + 20; // total: number
+```
+
+#### Key Concepts
+
+1. **Static vs Dynamic Typing**: TypeScript checks types at compile time
+2. **Type Inference**: TypeScript can often figure out types automatically
+3. **Explicit Typing**: When we specifically declare what type something should be
+
+#### Practical Exercise
+
+Convert this JavaScript code to include type comments:
+``javascript
+function calculateArea(width, height) {
+return width \* height;
+}
+
+let roomWidth = 10;
+let roomHeight = 15;
+let area = calculateArea(roomWidth, roomHeight);
+
+let roomName = "Living Room";
+let roomDescription = roomName + " has area of " + area;
+
+```
+
+### Day 3-4: First TypeScript Annotations
+
+#### Setting Up TypeScript
+1. Install TypeScript: `npm install -g typescript`
+2. Create a tsconfig.json file
+3. Compile with: `tsc filename.ts`
+
+#### Basic Type Annotations
+``typescript
+// Primitive types
+let productName: string = "Laptop";
+let productPrice: number = 999.99;
+let isInStock: boolean = true;
+
+// Arrays
+let sizes: string[] = ["small", "medium", "large"];
+let prices: number[] = [100, 200, 300];
+// Alternative syntax
+let quantities: Array<number> = [1, 2, 3];
+
+// Functions with type annotations
+function calculateTotal(price: number, quantity: number): number {
+  return price * quantity;
+}
+
+// Void functions
+function logMessage(message: string): void {
+  console.log(message);
+}
+```
+
+#### Type Inference
+
+TypeScript can often infer types:
+``typescript
+let productName = "Laptop"; // TypeScript knows this is a string
+let productPrice = 999.99; // TypeScript knows this is a number
+
+// But sometimes we need to be explicit
+let productId: string | number = "ABC123"; // Could be either
+productId = 123456; // Still valid
+
+```
+
+#### Practical Exercise
+Fix these TypeScript errors:
+``typescript
+let userName: string = "Alice";
+userName = 123; // Error!
+
+function greet(name: string): string {
+  return "Hello, " + name;
+}
+greet(42); // Error!
+
+let scores: number[] = [85, 92, 78];
+scores.push("A"); // Error!
+```
+
+### Day 5: Arrow Functions and Type Safety
+
+#### Arrow Functions with Types
+
+``typescript
+// Regular function
+function add(a: number, b: number): number {
+return a + b;
+}
+
+// Arrow function equivalent
+const addArrow = (a: number, b: number): number => {
+return a + b;
+};
+
+// Concise arrow function
+const multiply = (a: number, b: number): number => a \* b;
+
+// With type inference
+const subtract = (a: number, b: number) => a - b; // Return type inferred as number
+
+```
+
+#### forEach with Typed Callbacks
+``typescript
+let products: string[] = ["Laptop", "Mouse", "Keyboard"];
+
+// Without types - potential for errors
+products.forEach(function(product) {
+  console.log(product.toUpperCase());
+});
+
+// With TypeScript - safer and clearer
+products.forEach((product: string) => {
+  console.log(product.toUpperCase());
+  // TypeScript ensures product is a string, so toUpperCase() is safe
+});
+```
+
+#### Weekly Project: "Inventory Tracker"
+
+Create a simple inventory system with:
+
+1. Typed arrays for product names and prices
+2. Functions with proper type annotations
+3. forEach loops with typed callbacks
+4. Error prevention through static typing
+
+### Key Takeaways
+
+- TypeScript adds a layer of safety to JavaScript
+- Basic types: string, number, boolean
+- Array types: type[] or Array<type>
+- Function parameter and return types
+- Type inference vs explicit typing
+- Arrow functions with type annotations
+
+## Week 2: Deep Dive into Type Annotations and Union Types
+
+### Learning Objectives
+
+- Master primitive types and their usage
+- Understand union types for flexible typing
+- Learn to work with arrays of mixed types
+- Handle optional and nullable values
+- Use type aliases for reusable type definitions
+
+### Day 1-2: Advanced Primitive Types and Literals
+
+#### Beyond Basic Primitives
+
+``typescript
+// any - use sparingly!
+let uncertainValue: any = "could be anything";
+uncertainValue = 42; // No error
+uncertainValue = true; // Still no error
+
+// unknown - safer than any
+let unknownValue: unknown = "could be anything";
+unknownValue = 42; // OK
+unknownValue = true; // OK
+// But we can't use it without type checking
+// unknownValue.toFixed(); // Error! Need to check type first
+
+// null and undefined
+let emptyValue: null = null;
+let notAssigned: undefined = undefined;
+
+// void - for functions that don't return anything
+function logMessage(message: string): void {
+console.log(message);
+// No return statement or implicit return of undefined
+}
+
+```
+
+#### Literal Types
+``typescript
+// String literals
+let direction: "up" | "down" | "left" | "right";
+direction = "up"; // OK
+// direction = "diagonal"; // Error!
+
+// Number literals
+let diceRoll: 1 | 2 | 3 | 4 | 5 | 6;
+diceRoll = 3; // OK
+// diceRoll = 7; // Error!
+
+// Boolean literals
+let isSuccess: true = true;
+// isSuccess = false; // Error! Can only be true
+```
+
+#### Practical Exercise
+
+Create a traffic light system using literal types:
+``typescript
+// Define the possible states
+let trafficLight: "red" | "yellow" | "green";
+
+// Function to change light
+function changeLight(current: "red" | "yellow" | "green"): "red" | "yellow" | "green" {
+// Implementation here
+}
+
+```
+
+### Day 3-4: Union Types and Type Narrowing
+
+#### Union Types
+Union types allow a value to be one of several types:
+``typescript
+// A value that can be a string or a number
+let userId: string | number;
+userId = "user123"; // OK
+userId = 456; // Also OK
+
+// Arrays with mixed types
+let mixedArray: (string | number)[] = ["hello", 42, "world", 7];
+
+// Function parameters with union types
+function formatId(id: string | number): string {
+  // How do we handle both types?
+  return id.toString(); // Works for both string and number
+}
+```
+
+#### Type Narrowing
+
+When working with union types, we often need to determine which type we're working with:
+``typescript
+function printId(id: string | number) {
+if (typeof id === "string") {
+// In this branch, TypeScript knows id is a string
+console.log(id.toUpperCase()); // Safe to use string methods
+} else {
+// In this branch, TypeScript knows id is a number
+console.log(id.toFixed(2)); // Safe to use number methods
+}
+}
+
+// Another example with arrays
+function getFirstElement(arr: string[] | number[]): string | number {
+return arr[0];
+}
+
+function processFirstElement(arr: string[] | number[]) {
+const first = getFirstElement(arr);
+
+if (typeof first === "string") {
+console.log(first.toUpperCase());
+} else {
+console.log(first.toFixed(2));
+}
+}
+
+```
+
+#### Practical Exercise
+Fix this code using union types and type narrowing:
+``typescript
+// Problem: This function should work with both arrays and single values
+function processValue(value: any) {
+  if (Array.isArray(value)) {
+    return value.map(item => item.toString());
+  } else {
+    return value.toString();
+  }
+}
+
+// Convert to TypeScript with proper types
+```
+
+### Day 5: Type Aliases and Optional Properties
+
+#### Type Aliases
+
+Type aliases create new names for types:
+``typescript
+// Simple type alias
+type UserId = string | number;
+
+let user1: UserId = "user123";
+let user2: UserId = 456;
+
+// Complex type alias
+type Coordinates = {
+x: number;
+y: number;
+};
+
+let point: Coordinates = {
+x: 10,
+y: 20
+};
+
+// Function type aliases
+type MathOperation = (a: number, b: number) => number;
+
+const add: MathOperation = (a, b) => a + b;
+const multiply: MathOperation = (a, b) => a \* b;
+
+```
+
+#### Optional Properties
+``typescript
+// Object with optional properties
+type UserProfile = {
+  name: string;
+  age?: number; // Optional property
+  email?: string; // Optional property
+};
+
+let user: UserProfile = {
+  name: "Alice"
+  // age and email are optional, so they're not required
+};
+
+// Accessing optional properties
+function greetUser(user: UserProfile) {
+  console.log(`Hello, ${user.name}`);
+
+  if (user.age !== undefined) {
+    console.log(`You are ${user.age} years old`);
+  }
+
+  // Alternative using optional chaining
+  console.log(`Email: ${user.email ?? "Not provided"}`);
+}
+```
+
+#### Weekly Project: "Enhanced Inventory System"
+
+Expand the Week 1 inventory system with:
+
+1. Union types for product IDs (strings or numbers)
+2. Optional properties for product descriptions
+3. Type aliases for product categories
+4. Type narrowing for processing different product types
+5. Literal types for product status ("in-stock", "out-of-stock", "discontinued")
+
+### Key Takeaways
+
+- Union types allow flexibility while maintaining safety
+- Type narrowing helps work with union types effectively
+- Type aliases make complex types reusable and readable
+- Optional properties handle missing data gracefully
+- Literal types provide precise value constraints
+
+## Week 3: Interfaces, Objects, and Type Contracts
+
+### Learning Objectives
+
+- Define object structures using interfaces
+- Implement interfaces in objects and classes
+- Understand the difference between interfaces and type aliases
+- Work with optional and readonly properties
+- Use interfaces to ensure consistent object shapes
+
+### Day 1-2: Introduction to Interfaces
+
+#### What are Interfaces?
+
+Interfaces define the shape of objects - what properties they have and what types those properties are:
+``typescript
+// Define an interface for a person
+interface Person {
+name: string;
+age: number;
+email: string;
+}
+
+// Use the interface
+let user: Person = {
+name: "Alice",
+age: 30,
+email: "alice@example.com"
+};
+
+// TypeScript ensures the object matches the interface
+// This would cause an error:
+/_
+let invalidUser: Person = {
+name: "Bob",
+age: 25
+// Error: Missing 'email' property
+};
+_/
+
+```
+
+#### Optional and Readonly Properties
+``typescript
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  description?: string; // Optional property
+  readonly category: string; // Cannot be changed after creation
+}
+
+let laptop: Product = {
+  id: 1,
+  name: "MacBook Pro",
+  price: 1999.99,
+  category: "Electronics"
+};
+
+// laptop.category = "Computers"; // Error! Cannot change readonly property
+laptop.description = "Powerful laptop"; // OK, optional property can be added
+```
+
+#### Interface vs Type Alias
+
+Both can define object shapes, but interfaces have some special capabilities:
+``typescript
+// Type alias approach
+type User = {
+name: string;
+age: number;
+};
+
+// Interface approach
+interface IUser {
+name: string;
+age: number;
+}
+
+// Interfaces can be extended (more on this later)
+interface IEmployee extends IUser {
+employeeId: number;
+}
+
+// Interfaces can be implemented by classes (more on this later)
+
+```
+
+#### Practical Exercise
+Create interfaces for a library system:
+``typescript
+// Define interfaces for books, members, and loans
+interface Book {
+  isbn: string;
+  title: string;
+  author: string;
+  publishedYear: number;
+  isAvailable: boolean;
+}
+
+interface Member {
+  memberId: number;
+  name: string;
+  email: string;
+  booksLoaned: string[]; // ISBNs of books currently loaned
+}
+
+interface Loan {
+  bookIsbn: string;
+  memberId: number;
+  loanDate: Date;
+  dueDate: Date;
+  returnedDate?: Date; // Optional, only when book is returned
+}
+```
+
+### Day 3-4: Interface Extension and Complex Objects
+
+#### Extending Interfaces
+
+Interfaces can extend other interfaces to build more complex types:
+``typescript
+// Base interface
+interface Animal {
+name: string;
+species: string;
+age: number;
+}
+
+// Extended interface
+interface Pet extends Animal {
+owner: string;
+isHouseTrained: boolean;
+}
+
+// Further extension
+interface Dog extends Pet {
+breed: string;
+favoriteToy: string;
+}
+
+// Now we can create a dog with all properties
+let myDog: Dog = {
+name: "Buddy",
+species: "Canine",
+age: 3,
+owner: "Alice",
+isHouseTrained: true,
+breed: "Golden Retriever",
+favoriteToy: "Ball"
+};
+
+```
+
+#### Nested Objects and Arrays
+``typescript
+interface Address {
+  street: string;
+  city: string;
+  zipCode: string;
+  country: string;
+}
+
+interface Company {
+  name: string;
+  address: Address; // Nested object
+  employees: Person[]; // Array of objects
+}
+
+interface Person {
+  name: string;
+  age: number;
+  address: Address; // Reusing the Address interface
+  company?: Company; // Optional reference to company
+}
+
+let employee: Person = {
+  name: "Bob",
+  age: 35,
+  address: {
+    street: "123 Main St",
+    city: "New York",
+    zipCode: "10001",
+    country: "USA"
+  }
+};
+```
+
+#### Index Signatures
+
+Sometimes we need objects with dynamic properties:
+``typescript
+// Object that can have any number of string properties
+interface Dictionary {
+[key: string]: string;
+}
+
+let translations: Dictionary = {
+hello: "hola",
+goodbye: "adios",
+thankYou: "gracias"
+};
+
+// Accessing values
+console.log(translations.hello); // "hola"
+console.log(translations["goodbye"]); // "adios"
+
+// Object with numeric keys
+interface NumericDictionary {
+[index: number]: string;
+}
+
+let days: NumericDictionary = {
+1: "Monday",
+2: "Tuesday",
+3: "Wednesday"
+};
+
+```
+
+#### Practical Exercise
+Enhance the library system with nested objects:
+``typescript
+interface Library {
+  name: string;
+  address: Address;
+  books: Book[];
+  members: Member[];
+  loans: Loan[];
+}
+
+interface Address {
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
+}
+
+// Update the Book interface to include more details
+interface Book {
+  isbn: string;
+  title: string;
+  authors: string[]; // Multiple authors
+  publishedYear: number;
+  genres: string[]; // Multiple genres
+  isAvailable: boolean;
+  borrower?: string; // Who has it checked out
+}
+```
+
+### Day 5: Function Interfaces and Callback Types
+
+#### Function Interfaces
+
+Interfaces can also describe function shapes:
+``typescript
+// Interface for a function that takes two numbers and returns a number
+interface MathFunction {
+(a: number, b: number): number;
+}
+
+// Implement the interface
+let add: MathFunction = (x, y) => x + y;
+let multiply: MathFunction = (x, y) => x \* y;
+
+// Interface for a function with no parameters
+interface Generator {
+(): string;
+}
+
+let getRandomId: Generator = () => Math.random().toString(36).substring(7);
+
+```
+
+#### Callback Interfaces
+``typescript
+// Interface for a callback function
+interface EventHandler {
+  (event: string, data: any): void;
+}
+
+// Function that takes a callback
+function processData(data: any[], callback: EventHandler): void {
+  // Process data...
+  callback("processed", data);
+}
+
+// Using the function
+processData([1, 2, 3], (event, data) => {
+  console.log(`Event: ${event}, Data: ${data}`);
+});
+```
+
+#### Weekly Project: "Library Management System"
+
+Create a comprehensive library system using interfaces:
+
+1. Define interfaces for books, members, loans, and the library itself
+2. Implement nested objects for addresses and book details
+3. Use optional properties for data that might not always be present
+4. Create function interfaces for event handlers
+5. Ensure all object structures are validated by TypeScript
+
+### Key Takeaways
+
+- Interfaces define contracts for object shapes
+- Optional properties handle missing data gracefully
+- Readonly properties protect important data from changes
+- Interfaces can extend other interfaces to build complex types
+- Nested objects and arrays work naturally with interfaces
+- Function interfaces describe callable signatures
+
+## Week 4: Advanced Types, Generics, and Real-World Applications
+
+### Learning Objectives
+
+- Understand generics and how they provide reusable, type-safe code
+- Work with advanced types including enums and tuples
+- Implement type guards for runtime type checking
+- Use utility types for common transformations
+- Apply TypeScript to asynchronous operations and APIs
+
+### Day 1: Introduction to Generics
+
+#### What are Generics?
+
+Generics allow you to create reusable components that work with multiple types while maintaining type safety:
+``typescript
+// Without generics - not type safe
+function identity(arg: any): any {
+return arg;
+}
+// We don't know what type is returned
+
+// With generics - type safe
+function identity<T>(arg: T): T {
+return arg;
+}
+// T captures the type passed in
+// If we pass a number, T is number and we get a number back
+
+// Using generics
+let output1 = identity<string>("hello"); // T is string
+let output2 = identity<number>(42); // T is number
+let output3 = identity("hello"); // TypeScript infers T as string
+
+```
+
+#### Generic Arrays
+``typescript
+// Generic function that works with arrays of any type
+function getFirstElement<T>(arr: T[]): T | undefined {
+  return arr[0];
+}
+
+let firstNumber = getFirstElement([1, 2, 3]); // number | undefined
+let firstString = getFirstElement(["a", "b", "c"]); // string | undefined
+let firstPerson = getFirstElement([{name: "Alice"}, {name: "Bob"}]); // {name: string} | undefined
+```
+
+#### Multiple Generic Types
+
+``typescript
+// Function with multiple generic parameters
+function merge<T, U>(obj1: T, obj2: U): T & U {
+return {...obj1, ...obj2};
+}
+
+let person = { name: "Alice" };
+let job = { title: "Developer", salary: 50000 };
+
+let employee = merge(person, job);
+// Type is { name: string } & { title: string, salary: number }
+// Which becomes { name: string, title: string, salary: number }
+
+```
+
+#### Practical Exercise
+Create a generic stack implementation:
+``typescript
+class Stack<T> {
+  private items: T[] = [];
+
+  push(item: T): void {
+    this.items.push(item);
+  }
+
+  pop(): T | undefined {
+    return this.items.pop();
+  }
+
+  peek(): T | undefined {
+    return this.items[this.items.length - 1];
+  }
+
+  isEmpty(): boolean {
+    return this.items.length === 0;
+  }
+}
+
+// Usage
+let numberStack = new Stack<number>();
+numberStack.push(1);
+numberStack.push(2);
+// numberStack.push("hello"); // Error! Only numbers allowed
+
+let stringStack = new Stack<string>();
+stringStack.push("hello");
+stringStack.push("world");
+```
+
+### Day 2: Advanced Generic Patterns
+
+#### Generic Constraints
+
+Sometimes we want to limit what types can be used with generics:
+``typescript
+// We want to ensure T has a length property
+interface Lengthwise {
+length: number;
+}
+
+function logLength<T extends Lengthwise>(arg: T): T {
+console.log(arg.length); // Now we know it has a length property
+return arg;
+}
+
+// These work because they have length property
+logLength("hello"); // string has length
+logLength([1, 2, 3]); // array has length
+logLength({length: 10, value: "test"}); // object has length
+
+// This doesn't work
+// logLength(123); // Error! number doesn't have length property
+
+```
+
+#### Generic Classes with Constraints
+``typescript
+interface Identifiable {
+  id: number;
+}
+
+class Repository<T extends Identifiable> {
+  private items: T[] = [];
+
+  add(item: T): void {
+    this.items.push(item);
+  }
+
+  findById(id: number): T | undefined {
+    return this.items.find(item => item.id === id);
+  }
+
+  findAll(): T[] {
+    return [...this.items]; // Return copy to prevent external modification
+  }
+}
+
+interface User extends Identifiable {
+  name: string;
+  email: string;
+}
+
+interface Product extends Identifiable {
+  name: string;
+  price: number;
+}
+
+// Now we can create type-safe repositories
+let userRepo = new Repository<User>();
+let productRepo = new Repository<Product>();
+
+userRepo.add({id: 1, name: "Alice", email: "alice@example.com"});
+let user = userRepo.findById(1); // Type is User | undefined
+```
+
+#### Practical Exercise
+
+Enhance the stack implementation with constraints:
+``typescript
+interface Comparable {
+compareTo(other: this): number;
+}
+
+// Create a sorted stack that only accepts comparable items
+class SortedStack<T extends Comparable> {
+private items: T[] = [];
+
+push(item: T): void {
+// Insert item in sorted order
+let inserted = false;
+for (let i = 0; i < this.items.length; i++) {
+if (item.compareTo(this.items[i]) <= 0) {
+this.items.splice(i, 0, item);
+inserted = true;
+break;
+}
+}
+if (!inserted) {
+this.items.push(item);
+}
+}
+
+pop(): T | undefined {
+return this.items.pop();
+}
+}
+
+```
+
+### Day 3: Enums, Tuples, and Utility Types
+
+#### Enums
+Enums allow you to define a set of named constants:
+``typescript
+// Numeric enums
+enum Direction {
+  Up, // 0
+  Down, // 1
+  Left, // 2
+  Right // 3
+}
+
+let move: Direction = Direction.Up;
+
+// String enums
+enum HttpStatus {
+  OK = "200",
+  NotFound = "404",
+  ServerError = "500"
+}
+
+let response: HttpStatus = HttpStatus.OK;
+
+// Const enums (more efficient)
+const enum ScreenMode {
+  Light,
+  Dark
+}
+
+let mode = ScreenMode.Dark; // Compiled to direct value
+```
+
+#### Tuples
+
+Tuples are arrays with a fixed number of elements whose types are known:
+``typescript
+// Tuple type
+let person: [string, number] = ["Alice", 30];
+
+// Accessing elements
+let name = person[0]; // string
+let age = person[1]; // number
+
+// Destructuring
+let [personName, personAge] = person;
+
+// Optional elements in tuples (TypeScript 3.0+)
+let colorWithOptional: [string, number, number, number?] = ["red", 255, 0];
+colorWithOptional[3] = 128; // Optional fourth element
+
+```
+
+#### Utility Types
+TypeScript provides several built-in utility types:
+``typescript
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  isActive: boolean;
+}
+
+// Partial - makes all properties optional
+function updateUser(id: number, updates: Partial<User>) {
+  // updates can have any subset of User properties
+}
+
+updateUser(1, {name: "Bob"}); // OK
+updateUser(1, {email: "bob@example.com", isActive: false}); // OK
+
+// Pick - selects specific properties
+type UserSummary = Pick<User, "id" | "name">;
+// Equivalent to: { id: number, name: string }
+
+// Omit - removes specific properties
+type UserPublic = Omit<User, "id">;
+// Equivalent to: { name: string, email: string, isActive: boolean }
+
+// Record - creates an object type with specific keys and value types
+type Scores = Record<string, number>;
+let gameScores: Scores = {
+  "player1": 100,
+  "player2": 85
+};
+```
+
+### Day 4: Asynchronous TypeScript and API Integration
+
+#### Promise Types
+
+``typescript
+// Typed promises
+async function fetchUser(id: number): Promise<User> {
+  const response = await fetch(`/api/users/${id}`);
+const user: User = await response.json();
+return user;
+}
+
+// Working with Promise arrays
+async function fetchUsers(ids: number[]): Promise<User[]> {
+const promises = ids.map(id => fetchUser(id));
+const users = await Promise.all(promises);
+return users;
+}
+
+```
+
+#### Generic API Functions
+``typescript
+// Generic fetch function
+async function fetchData<T>(url: string): Promise<T> {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  const data: T = await response.json();
+  return data;
+}
+
+// Usage with interfaces
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+}
+
+interface ApiResponse<T> {
+  data: T;
+  status: string;
+  timestamp: string;
+}
+
+async function fetchProduct(id: number): Promise<Product> {
+  return fetchData<Product>(`/api/products/${id}`);
+}
+
+async function fetchProducts(): Promise<ApiResponse<Product[]>> {
+  return fetchData<ApiResponse<Product[]>>("/api/products");
+}
+```
+
+#### Type Guards for Runtime Checking
+
+```
+// Type predicate function
+function isUser(obj: any): obj is User {
+  return obj &&
+         typeof obj.id === "number" &&
+         typeof obj.name === "string" &&
+         typeof obj.email === "string" &&
+         typeof obj.isActive === "boolean";
+}
+
+// Using type guards
+async function processUserData(data: any) {
+  if (isUser(data)) {
+    // Inside this block, TypeScript knows data is a User
+    console.log(`User: ${data.name} (${data.email})`);
+  } else {
+    console.log("Invalid user data");
+  }
+}
+```
+
+#### Weekly Project: "Generic Data Management System"
+
+Create a comprehensive system that demonstrates advanced TypeScript features:
+
+1. Implement generic repositories for different data types
+2. Use enums for status management
+3. Apply utility types for data transformations
+4. Create type-safe API integration with generics
+5. Implement type guards for data validation
+6. Use tuples for coordinate systems or fixed data structures
+
+### Key Takeaways
+
+- Generics provide reusable, type-safe code
+- Generic constraints limit what types can be used
+- Enums provide type-safe constants
+- Tuples are fixed-length arrays with known types
+- Utility types transform existing types in useful ways
+- Typed promises and async/await improve asynchronous code safety
+- Type guards enable runtime type checking with compile-time safety
+
+## Practical Examples: How TypeScript Prevents Runtime Bugs
+
+### Example 1: Preventing Type Mismatches
+
+#### The Problem (JavaScript)
+
+```
+
+```
+
+#### The Solution (TypeScript)
+```
