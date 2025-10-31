@@ -1086,12 +1086,64 @@ Create a comprehensive system that demonstrates advanced TypeScript features:
 
 #### The Problem (JavaScript)
 
-```
+#### The Solution (TypeScript)
 
 ```
+
+### Example 2: Protecting Against Undefined Values
+
+#### The Problem (JavaScript)
 
 #### The Solution (TypeScript)
 
 ```
 
+### Example 3: Handling Arrays and Loops
+
+#### The Problem (JavaScript)
+
+#### The Solution (TypeScript)
+
 ```
+
+### Example 4: Object Property Access
+
+#### The Problem (JavaScript)
+
+#### The Solution (TypeScript)
+
+```
+
+## Learning Progression Summary
+
+```
+
+``'
+
+```
+
+``'
+
+```
+
+``'
+
+```
+
+``'
+
+```
+
+``'
+
+```
+
+``'
+
+```
+
+``'
+
+```
+
+``'
